@@ -8,18 +8,19 @@ from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
-try:
-    from django.utils.six.moves import cStringIO as StringIO
-except ImportError:
-    # For Django < 1.5:
-    from cStringIO import StringIO
+import io
+import unittest
 
 from cryptography.fernet import Fernet
+from unittest import mock
+
 try:
-    from unittest import mock
+    # Django 4.x only
+    from django.contrib.sessions.serializers import PickleSerializer
+
+    pickle_available = True
 except ImportError:
-    # For Python < 3.3
-    import mock
+    pickle_available = False
 
 from encrypted_cookies import (
     keygen,
@@ -76,6 +77,8 @@ class BaseSerializerTests(object):
 class PickleSerializerTests(BaseSerializerTests, Base):
 
     def setUp(self):
+        if not pickle_available:
+            self.skipTest("PickleSerializer is gone in Django 5.0+")
         self.serializer = EncryptingPickleSerializer()
 
 
@@ -91,15 +94,19 @@ class SerializerSettingsTests(Base):
     def test_json_setting(self):
         self.assertIsInstance(EncryptingSerializer(), EncryptingJSONSerializer)
 
+    @unittest.skipUnless(pickle_available, "PickleSerializer is gone in Django 5.0+")
     @override_settings(ENCRYPTED_COOKIE_SERIALIZER='pickle')
     def test_pickle_setting(self):
         self.assertIsInstance(EncryptingSerializer(), EncryptingPickleSerializer)
 
     @override_settings()
-    def test_default_setting_is_pickle(self):
+    def test_default_setting(self):
         if hasattr(settings, 'ENCRYPTED_COOKIE_SERIALIZER'):
             del settings.ENCRYPTED_COOKIE_SERIALIZER
-        self.assertIsInstance(EncryptingSerializer(), EncryptingPickleSerializer)
+        if pickle_available:
+            self.assertIsInstance(EncryptingSerializer(), EncryptingPickleSerializer)
+        else:
+            self.assertIsInstance(EncryptingSerializer(), EncryptingJSONSerializer)
 
     @override_settings(ENCRYPTED_COOKIE_SERIALIZER='clay_tablet')
     def test_invalid_serializer_not_allowed(self):
@@ -179,7 +186,7 @@ class SessionStoreTests(Base):
 class TestKeygen(TestCase):
 
     def test_generate_key(self):
-        stdout = StringIO()
+        stdout = io.StringIO()
         try:
             keygen.main(stdout=stdout, argv=[])
         except SystemExit as exc:
