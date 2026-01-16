@@ -7,13 +7,8 @@ import zlib
 import django.contrib.sessions.backends.signed_cookies
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.contrib.sessions.serializers import JSONSerializer
 
-try:
-    # Django 1.5.x support
-    from django.contrib.sessions.serializers import JSONSerializer
-except ImportError:
-    # Legacy Django support
-    from django.core.signing import JSONSerializer
 try:
     # Django 1.5.x support
     from django.contrib.sessions.serializers import PickleSerializer
