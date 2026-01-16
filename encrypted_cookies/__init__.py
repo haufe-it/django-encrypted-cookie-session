@@ -10,11 +10,12 @@ from django.core.exceptions import ImproperlyConfigured
 from django.contrib.sessions.serializers import JSONSerializer
 
 try:
-    # Django 1.5.x support
+    # Django 4.x only
     from django.contrib.sessions.serializers import PickleSerializer
+    pickle_available=True
 except ImportError:
-    # Legacy Django support
-    from django.contrib.sessions.backends.signed_cookies import PickleSerializer
+    pickle_available=False
+
 from django.core import signing
 
 try:
@@ -71,7 +72,10 @@ class EncryptingJSONSerializer(BaseEncryptingSerializer):
         self._serializer = JSONSerializer()
 
 
-_DEFAULT_SERIALIZER = 'pickle'
+if pickle_available:
+    _DEFAULT_SERIALIZER = 'pickle'
+else:
+    _DEFAULT_SERIALIZER = 'json'
 
 def EncryptingSerializer():
     # use the default if unset, or set to any Falsey value
