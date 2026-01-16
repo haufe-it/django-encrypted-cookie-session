@@ -19,10 +19,10 @@ Adding it to your Django Project
 Here are some installation commands you can follow using the
 [pip](http://www.pip-installer.org/) installer.
 You'll need
-[Django](https://djangoproject.com/) 1.4.x or greater (tested through 1.9)
+[Django](https://djangoproject.com/) 4.2.x or greater (tested through 6.0)
 and [cryptography](https://cryptography.io/en/latest/)
 which are both automatically installed for you.
-Python 2.6, 2.7, 3.3, 3.4, and 3.5 are supported.
+All python versions supported by the respective Django release are supported.
 
 Install the module and its dependencies with pip:
 
@@ -60,6 +60,10 @@ Optionally, you can opt to use JSON for serialization, rather
 than the default (pickle):
 
     ENCRYPTED_COOKIE_SERIALIZER = 'json'
+
+Note that starting with Django 5.0, the pickle serializer is no longer
+available. `django-encrypted-cookie-session` will default to json on
+those versions.
 
 Key Rotation
 ============
@@ -191,8 +195,7 @@ Running the tests
 
 To run the tests against multiple environments, install
 [tox](http://tox.readthedocs.org/) using
-`pip install tox`. You need at least Python 2.7 to run tox itself but you'll
-need 2.6 as well to run all environments. Run the tests like this:
+`pip install tox`. Run the tests like this:
 
     tox
 
@@ -205,11 +208,11 @@ like this:
 
 To run the tests against a single environment:
 
-    tox -e py27-django18
+    tox -e py314-django60
 
 To debug something weird, run it directly from the virtualenv like:
 
-    .tox/py27-django18/bin/python manage.py test
+    .tox/py314-django60/bin/python manage.py test
 
 Changelog
 =========
