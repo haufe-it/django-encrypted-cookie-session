@@ -2,27 +2,33 @@ sudo: false
 language: python
 python: 2.7
 env:
-    - TOX_ENV=py26-django16
-    - TOX_ENV=py27-django14
-    - TOX_ENV=py27-django15
-    - TOX_ENV=py27-django16
-    - TOX_ENV=py27-django17
-    - TOX_ENV=py27-django18
-    - TOX_ENV=py27-django19
-    - TOX_ENV=py33-django16
-    - TOX_ENV=py33-django17
-    - TOX_ENV=py33-django18
-    - TOX_ENV=py34-django16
-    - TOX_ENV=py34-django17
-    - TOX_ENV=py34-django18
-    - TOX_ENV=py34-django19
+    - TOX_ENV=py310-django42
+    - TOX_ENV=py310-django50
+    - TOX_ENV=py310-django51
+    - TOX_ENV=py310-django52
+    - TOX_ENV=py311-django42
+    - TOX_ENV=py311-django50
+    - TOX_ENV=py311-django51
+    - TOX_ENV=py311-django52
+    - TOX_ENV=py312-django42
+    - TOX_ENV=py312-django50
+    - TOX_ENV=py312-django51
+    - TOX_ENV=py312-django52
+    - TOX_ENV=py312-django60
+    - TOX_ENV=py313-django51
+    - TOX_ENV=py313-django52
+    - TOX_ENV=py313-django60
+    - TOX_ENV=py314-django52
+    - TOX_ENV=py314-django60
 matrix:
     fast_finish: true
     include:
-        - python: 3.5
-          env: TOX_ENV=py35-django18
-        - python: 3.5
-          env: TOX_ENV=py35-django19
+        - python: 3.12
+          env: TOX_ENV=py312-django42
+        - python: 3.14
+          env: TOX_ENV=py314-django52
+        - python: 3.14
+          env: TOX_ENV=py314-django60
 install:
     - pip install tox
 script:
