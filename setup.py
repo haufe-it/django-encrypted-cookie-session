@@ -16,8 +16,8 @@ author = 'Bright Interactive'
 author_email = 'francis@bright-interactive.co.uk'
 license = 'BSD'
 install_requires = [
-    'Django>=1.4',
-    'cryptography>=0.7',
+    'Django>=4.2',
+    'cryptography>=36',
 ]
 entry_points = {
     'console_scripts': [
