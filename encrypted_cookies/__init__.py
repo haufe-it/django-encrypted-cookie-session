@@ -18,10 +18,7 @@ except ImportError:
 
 from django.core import signing
 
-try:
-    from django.utils.six.moves import cPickle as pickle
-except ImportError:
-    import pickle
+import pickle
 
 from cryptography.fernet import InvalidToken
 
